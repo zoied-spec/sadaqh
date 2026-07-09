@@ -1,0 +1,518 @@
+/* =========================================================================
+   Sadaqah Stories — Stylesheet
+   Warm watercolor aesthetic (matches the Adobe Firefly art direction).
+   Self-contained: all colors as variables, scoped under #ss-app so it can be
+   safely embedded inside any host page without bleeding onto the parent.
+   ========================================================================= */
+
+:root {
+  --bg: #fbf6ee;
+  --bg-soft: #f4ead8;
+  --ink: #3a2e22;
+  --ink-soft: #6b5a48;
+  --gold: #c79a3a;
+  --gold-deep: #a37d22;
+  --teal: #2f8f87;
+  --teal-deep: #1f6b64;
+  --rose: #c66b6b;
+  --green: #5b8c4f;
+  --card: #fffdf8;
+  --card-edge: #ecd9b8;
+  --shadow: 0 6px 24px rgba(90, 60, 20, 0.12);
+  --shadow-soft: 0 2px 10px rgba(90, 60, 20, 0.08);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --font: "Segoe UI", "Helvetica Neue", system-ui, -apple-system, Arial, sans-serif;
+  --serif: Georgia, "Times New Roman", serif;
+}
+
+* { box-sizing: border-box; }
+
+#ss-app {
+  font-family: var(--font);
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #f7e9c9 0%, transparent 55%),
+    radial-gradient(900px 500px at 110% 10%, #e6f0ec 0%, transparent 50%),
+    var(--bg);
+  min-height: 100%;
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+#ss-app .ss-wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px 64px; }
+
+/* ----------------------------- Top bar ---------------------------------- */
+#ss-app .ss-topbar {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 20px;
+  background: rgba(251, 246, 238, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--card-edge);
+}
+#ss-app .ss-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 700; }
+#ss-app .ss-brand img { width: 38px; height: 38px; border-radius: 10px; box-shadow: var(--shadow-soft); }
+#ss-app .ss-brand .ss-brand-name { font-size: 18px; color: var(--ink); }
+#ss-app .ss-brand .ss-brand-sub { font-size: 12px; color: var(--ink-soft); display: block; font-weight: 500; }
+#ss-app .ss-spacer { flex: 1; }
+#ss-app .ss-breadcrumb {
+  font-size: 13px; color: var(--ink-soft);
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  justify-content: flex-end;
+}
+#ss-app .ss-breadcrumb .ss-crumb { cursor: pointer; }
+#ss-app .ss-breadcrumb .ss-crumb:hover { color: var(--gold-deep); }
+#ss-app .ss-breadcrumb .ss-sep { opacity: 0.5; }
+#ss-app .ss-stars {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--card); border: 1px solid var(--card-edge);
+  padding: 6px 12px; border-radius: 999px; font-weight: 700; color: var(--gold-deep);
+  box-shadow: var(--shadow-soft); cursor: pointer;
+}
+
+/* ----------------------------- Buttons ---------------------------------- */
+#ss-app button {
+  font-family: inherit; cursor: pointer; border: none; background: none; color: inherit;
+}
+#ss-app .ss-btn {
+  display: inline-flex; align-items: center; gap: 8px; justify-content: center;
+  padding: 12px 22px; border-radius: 999px; font-weight: 700; font-size: 15px;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+#ss-app .ss-btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold-deep)); color: #fff; box-shadow: var(--shadow); }
+#ss-app .ss-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(163,125,34,.32); }
+#ss-app .ss-btn-ghost { background: var(--card); color: var(--ink); border: 1px solid var(--card-edge); box-shadow: var(--shadow-soft); }
+#ss-app .ss-btn-ghost:hover { transform: translateY(-2px); border-color: var(--gold); }
+#ss-app .ss-btn-teal { background: linear-gradient(135deg, var(--teal), var(--teal-deep)); color: #fff; box-shadow: var(--shadow); }
+#ss-app .ss-btn-teal:hover { transform: translateY(-2px); }
+
+/* ----------------------------- Home ------------------------------------- */
+#ss-app .ss-hero {
+  margin-top: 28px;
+  background: linear-gradient(135deg, rgba(255,253,248,.9), rgba(244,234,216,.7));
+  border: 1px solid var(--card-edge); border-radius: var(--radius);
+  padding: 40px 36px; box-shadow: var(--shadow); position: relative; overflow: hidden;
+}
+#ss-app .ss-hero::after {
+  content: ""; position: absolute; right: -60px; top: -60px; width: 280px; height: 280px;
+  background: url("assets/mosque.jpeg") center/cover; opacity: .18; border-radius: 50%;
+  filter: saturate(.8);
+}
+#ss-app .ss-hero h1 { font-family: var(--serif); font-size: 38px; margin: 0 0 10px; line-height: 1.15; max-width: 620px; }
+#ss-app .ss-hero p { font-size: 18px; color: var(--ink-soft); max-width: 580px; margin: 0 0 22px; }
+#ss-app .ss-hero .ss-cta { display: flex; gap: 12px; flex-wrap: wrap; position: relative; z-index: 1; }
+
+#ss-app .ss-modules {
+  margin-top: 30px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
+}
+@media (max-width: 720px) { #ss-app .ss-modules { grid-template-columns: 1fr; } }
+
+#ss-app .ss-mod-card {
+  position: relative; border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--card-edge); background: var(--card);
+  box-shadow: var(--shadow); cursor: pointer;
+  transition: transform .14s ease, box-shadow .14s ease;
+  display: flex; flex-direction: column;
+}
+#ss-app .ss-mod-card:hover { transform: translateY(-4px); box-shadow: 0 14px 34px rgba(90,60,20,.2); }
+#ss-app .ss-mod-card .ss-mod-art { height: 140px; background-size: cover; background-position: center; }
+#ss-app .ss-mod-card .ss-mod-body { padding: 18px 20px 22px; }
+#ss-app .ss-mod-tag { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-deep); }
+#ss-app .ss-mod-card h3 { font-family: var(--serif); font-size: 22px; margin: 6px 0 8px; }
+#ss-app .ss-mod-card p { color: var(--ink-soft); margin: 0; font-size: 15px; }
+#ss-app .ss-mod-go { margin-top: 14px; color: var(--teal-deep); font-weight: 700; font-size: 14px; display: inline-flex; gap: 6px; align-items: center; }
+
+/* ----------------------------- Section headers -------------------------- */
+#ss-app .ss-section-head { margin: 36px 0 18px; }
+#ss-app .ss-section-head h2 { font-family: var(--serif); font-size: 30px; margin: 0 0 6px; }
+#ss-app .ss-section-head p { color: var(--ink-soft); margin: 0; max-width: 700px; }
+
+/* ----------------------------- Story grid (Module A) -------------------- */
+#ss-app .ss-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
+#ss-app .ss-story-card {
+  background: var(--card); border: 1px solid var(--card-edge); border-radius: var(--radius);
+  overflow: hidden; box-shadow: var(--shadow-soft); cursor: pointer;
+  transition: transform .14s ease, box-shadow .14s ease; display: flex; flex-direction: column;
+}
+#ss-app .ss-story-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+#ss-app .ss-story-card .ss-art { height: 150px; background-size: cover; background-position: center; }
+#ss-app .ss-story-card .ss-body { padding: 14px 16px 18px; flex: 1; display: flex; flex-direction: column; }
+#ss-app .ss-num { font-size: 12px; font-weight: 800; color: var(--gold-deep); letter-spacing: .06em; }
+#ss-app .ss-story-card h4 { font-family: var(--serif); font-size: 18px; margin: 4px 0 2px; }
+#ss-app .ss-figure { font-weight: 700; color: var(--teal-deep); font-size: 14px; }
+#ss-app .ss-meta { font-size: 12px; color: var(--ink-soft); margin-top: 6px; }
+#ss-app .ss-summ { font-size: 14px; color: var(--ink-soft); margin-top: 8px; flex: 1; }
+#ss-pill {
+  display: inline-block; font-size: 11px; font-weight: 700; color: var(--gold-deep);
+  background: var(--bg-soft); padding: 4px 10px; border-radius: 999px; margin-top: 10px;
+}
+
+/* ----------------------------- Detail view ------------------------------ */
+#ss-app .ss-back { display: inline-flex; align-items: center; gap: 6px; color: var(--teal-deep); font-weight: 700; margin: 24px 0 12px; cursor: pointer; }
+#ss-app .ss-detail-head { display: grid; grid-template-columns: 1.1fr .9fr; gap: 26px; align-items: start; }
+@media (max-width: 760px) { #ss-app .ss-detail-head { grid-template-columns: 1fr; } }
+#ss-app .ss-detail-art { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+#ss-app .ss-detail-art img { width: 100%; display: block; }
+#ss-app .ss-detail-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+#ss-app .ss-detail-meta .ss-pill { margin: 0; }
+#ss-app .ss-prose p { margin: 0 0 14px; font-size: 16.5px; }
+#ss-app .ss-prose p:first-letter { font-family: var(--serif); font-size: 1.6em; color: var(--gold-deep); }
+#ss-app .ss-art-row { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+#ss-app .ss-art-row img { width: 96px; height: 72px; object-fit: cover; border-radius: 10px; box-shadow: var(--shadow-soft); cursor: pointer; border: 2px solid transparent; }
+#ss-app .ss-art-row img.active { border-color: var(--gold); }
+
+/* ----------------------------- Module B impact -------------------------- */
+#ss-app .ss-sim-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+#ss-app .ss-sim-tab {
+  padding: 10px 16px; border-radius: 999px; background: var(--card); border: 1px solid var(--card-edge);
+  font-weight: 700; font-size: 14px; color: var(--ink-soft); box-shadow: var(--shadow-soft);
+  display: inline-flex; gap: 6px; align-items: center;
+}
+#ss-app .ss-sim-tab.active { background: linear-gradient(135deg, var(--teal), var(--teal-deep)); color: #fff; border-color: transparent; }
+#ss-app .ss-sim { background: var(--card); border: 1px solid var(--card-edge); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+#ss-app .ss-sim-head { display: grid; grid-template-columns: 220px 1fr; gap: 20px; padding: 22px; background: linear-gradient(135deg, var(--bg-soft), var(--card)); }
+@media (max-width: 620px) { #ss-app .ss-sim-head { grid-template-columns: 1fr; } }
+#ss-app .ss-sim-head img { width: 100%; height: 150px; object-fit: cover; border-radius: var(--radius-sm); box-shadow: var(--shadow-soft); }
+#ss-app .ss-sim-head h3 { font-family: var(--serif); font-size: 24px; margin: 0 0 4px; }
+#ss-app .ss-sim-overview { color: var(--ink-soft); font-size: 14.5px; margin: 8px 0; }
+#ss-app .ss-cost { font-weight: 800; color: var(--gold-deep); font-size: 13px; }
+
+#ss-app .ss-year-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--card-edge); }
+@media (max-width: 620px) { #ss-app .ss-year-rail { grid-template-columns: repeat(2, 1fr); } }
+#ss-app .ss-year-btn {
+  padding: 16px 8px; font-weight: 800; font-size: 15px; color: var(--ink-soft);
+  border-right: 1px solid var(--card-edge); background: var(--bg-soft); position: relative;
+}
+#ss-app .ss-year-btn:last-child { border-right: none; }
+#ss-app .ss-year-btn small { display: block; font-weight: 600; font-size: 11px; color: var(--ink-soft); opacity: .8; margin-top: 2px; }
+#ss-app .ss-year-btn.active { background: linear-gradient(135deg, var(--gold), var(--gold-deep)); color: #fff; }
+#ss-app .ss-year-btn.active small { color: #fff; opacity: .9; }
+
+#ss-app .ss-year-panel { padding: 22px; }
+#ss-app .ss-year-panel .ss-year-h { font-family: var(--serif); font-size: 26px; margin: 0; }
+#ss-app .ss-year-panel .ss-year-metric { font-size: 15px; color: var(--teal-deep); font-weight: 700; margin: 4px 0 14px; }
+#ss-app .ss-year-panel ul { margin: 0; padding-left: 20px; }
+#ss-app .ss-year-panel li { margin-bottom: 10px; font-size: 15.5px; }
+#ss-app .ss-year-prog { display: flex; gap: 6px; margin: 8px 0 18px; }
+#ss-app .ss-year-prog span { height: 8px; flex: 1; border-radius: 4px; background: var(--bg-soft); }
+#ss-app .ss-year-prog span.on { background: linear-gradient(90deg, var(--gold), var(--teal)); }
+
+/* ----------------------------- Module C games --------------------------- */
+#ss-app .ss-age-row { margin-bottom: 26px; }
+#ss-app .ss-age-label {
+  display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px;
+  color: var(--teal-deep); background: rgba(47,143,135,.1); padding: 6px 14px; border-radius: 999px;
+}
+#ss-app .ss-game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 14px; }
+#ss-app .ss-game-card {
+  background: var(--card); border: 1px solid var(--card-edge); border-radius: var(--radius);
+  padding: 18px; box-shadow: var(--shadow-soft); display: flex; flex-direction: column; gap: 8px;
+}
+#ss-app .ss-game-card .ss-gtop { display: flex; align-items: center; gap: 10px; }
+#ss-app .ss-game-card .ss-gicon { font-size: 30px; }
+#ss-app .ss-game-card h4 { font-family: var(--serif); font-size: 19px; margin: 0; flex: 1; }
+#ss-app .ss-diff { font-size: 11px; font-weight: 700; color: var(--rose); background: rgba(198,107,107,.1); padding: 3px 8px; border-radius: 999px; align-self: flex-start; }
+#ss-app .ss-game-card p { font-size: 14px; color: var(--ink-soft); margin: 0; }
+#ss-app .ss-game-card .ss-outcome { font-size: 13px; color: var(--teal-deep); background: rgba(47,143,135,.08); padding: 8px 12px; border-radius: 10px; }
+#ss-app .ss-play { margin-top: 6px; align-self: flex-start; padding: 9px 18px; font-size: 14px; }
+
+/* Game canvas / playfield */
+#ss-app .ss-playfield {
+  background: var(--card); border: 1px solid var(--card-edge); border-radius: var(--radius);
+  padding: 22px; box-shadow: var(--shadow); margin-top: 16px;
+}
+#ss-app .ss-game-title { font-family: var(--serif); font-size: 24px; margin: 0 0 4px; }
+#ss-app .ss-game-sub { color: var(--ink-soft); margin: 0 0 16px; font-size: 14px; }
+
+#ss-app .ss-mem-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 460px; }
+@media (max-width: 480px) { #ss-app .ss-mem-grid { grid-template-columns: repeat(3, 1fr); } }
+#ss-app .ss-mem-card {
+  aspect-ratio: 1; border-radius: 14px; cursor: pointer; font-size: 34px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--gold), var(--gold-deep)); color: #fff;
+  box-shadow: var(--shadow-soft); transition: transform .15s ease; user-select: none;
+}
+#ss-app .ss-mem-card:hover { transform: scale(1.03); }
+#ss-app .ss-mem-card.flipped { background: var(--card); color: var(--ink); border: 2px solid var(--card-edge); }
+#ss-app .ss-mem-card.done { background: linear-gradient(135deg, var(--green), #3f6b35); color: #fff; cursor: default; }
+#ss-app .ss-mem-card .ss-label { font-size: 12px; font-weight: 700; padding: 4px; text-align: center; line-height: 1.1; }
+
+#ss-app .ss-drop-scene { display: flex; gap: 18px; flex-wrap: wrap; align-items: stretch; }
+#ss-app .ss-drop-need { flex: 1; min-width: 200px; background: var(--bg-soft); border-radius: var(--radius-sm); padding: 18px; text-align: center; }
+#ss-app .ss-drop-need .ss-emoji { font-size: 60px; }
+#ss-app .ss-drop-box { width: 140px; min-height: 140px; border: 3px dashed var(--gold); border-radius: var(--radius-sm); display: flex; flex-wrap: wrap; gap: 6px; align-content: flex-start; justify-content: center; padding: 10px; background: rgba(199,154,58,.05); }
+#ss-app .ss-drop-box.over { background: rgba(199,154,58,.18); }
+#ss-app .ss-shelf { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+#ss-app .ss-item { background: var(--card); border: 1px solid var(--card-edge); border-radius: 12px; padding: 10px 12px; cursor: grab; font-size: 14px; font-weight: 600; box-shadow: var(--shadow-soft); user-select: none; }
+#ss-app .ss-item:active { cursor: grabbing; }
+#ss-app .ss-item .ss-ie { font-size: 22px; display: block; }
+
+#ss-app .ss-tree-stage { text-align: center; padding: 10px; }
+#ss-app .ss-tree-emoji { font-size: 90px; transition: transform .4s ease; display: inline-block; }
+#ss-app .ss-tree-emoji.grow { transform: scale(1.1); }
+#ss-app .ss-tree-q { font-size: 18px; font-weight: 700; margin: 14px 0 12px; max-width: 480px; margin-left: auto; margin-right: auto; }
+#ss-app .ss-opts { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+#ss-app .ss-opt { background: var(--card); border: 2px solid var(--card-edge); border-radius: 14px; padding: 16px 18px; min-width: 120px; cursor: pointer; font-size: 15px; font-weight: 600; box-shadow: var(--shadow-soft); }
+#ss-app .ss-opt:hover { border-color: var(--teal); transform: translateY(-2px); }
+#ss-app .ss-opt .ss-oe { font-size: 30px; display: block; margin-bottom: 4px; }
+
+#ss-app .ss-comm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 10px; max-width: 700px; }
+#ss-app .ss-proj-pick { background: var(--card); border: 2px solid var(--card-edge); border-radius: 14px; padding: 14px; cursor: pointer; text-align: left; box-shadow: var(--shadow-soft); }
+#ss-app .ss-proj-pick:hover { border-color: var(--gold); }
+#ss-app .ss-proj-pick.selected { border-color: var(--teal); background: rgba(47,143,135,.06); }
+#ss-app .ss-proj-pick .ss-pi { font-size: 28px; }
+#ss-app .ss-proj-pick .ss-pc { font-weight: 800; color: var(--gold-deep); font-size: 13px; }
+#ss-app .ss-proj-pick .ss-pn { font-weight: 700; font-size: 14px; }
+#ss-app .ss-proj-pick .ss-pd { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
+#ss-app .ss-budget-bar { background: var(--bg-soft); border-radius: 999px; height: 14px; overflow: hidden; margin: 12px 0; }
+#ss-app .ss-budget-bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--green), var(--teal)); transition: width .3s ease; }
+
+#ss-app .ss-zakat-bins { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 10px; margin-top: 12px; }
+#ss-app .ss-zbin { background: var(--bg-soft); border: 2px solid var(--card-edge); border-radius: 12px; padding: 10px; min-height: 120px; }
+#ss-app .ss-zbin.over { border-color: var(--gold); background: rgba(199,154,58,.1); }
+#ss-app .ss-zbin h5 { margin: 0 0 4px; font-size: 13px; color: var(--gold-deep); }
+#ss-app .ss-zbin .ss-zd { font-size: 11px; color: var(--ink-soft); margin: 0 0 6px; }
+#ss-app .ss-zbin .ss-chip { display: inline-block; background: var(--card); border: 1px solid var(--card-edge); border-radius: 999px; padding: 3px 8px; font-size: 11px; margin: 2px; }
+#ss-app .ss-zchar { background: var(--card); border: 2px solid var(--gold); border-radius: 14px; padding: 14px 18px; margin-bottom: 12px; cursor: grab; box-shadow: var(--shadow); }
+#ss-app .ss-zchar:active { cursor: grabbing; }
+
+#ss-app .ss-chain { display: flex; flex-direction: column; gap: 10px; max-width: 620px; }
+#ss-app .ss-chain-link { background: var(--card); border: 1px solid var(--card-edge); border-radius: 12px; padding: 12px 16px; box-shadow: var(--shadow-soft); display: flex; align-items: center; gap: 10px; }
+#ss-app .ss-chain-link .ss-cln { font-weight: 800; color: var(--gold-deep); min-width: 28px; }
+#ss-app .ss-chain-choices { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+
+#ss-app .ss-slider { width: 100%; max-width: 480px; accent-color: var(--gold-deep); }
+#ss-app .ss-result { display: flex; align-items: center; gap: 16px; background: var(--bg-soft); border-radius: var(--radius-sm); padding: 18px; margin-top: 16px; }
+#ss-app .ss-result .ss-re { font-size: 48px; }
+#ss-app .ss-calc-card { background: var(--card); border: 1px solid var(--card-edge); border-radius: var(--radius-sm); padding: 16px; box-shadow: var(--shadow-soft); }
+
+#ss-app .ss-segments { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+#ss-app .ss-seg { padding: 8px 16px; border-radius: 999px; background: var(--card); border: 1px solid var(--card-edge); font-weight: 700; font-size: 13px; cursor: pointer; color: var(--ink-soft); }
+#ss-app .ss-seg.selected { background: var(--teal); color: #fff; border-color: transparent; }
+
+#ss-app .ss-dilemma { background: var(--card); border: 1px solid var(--card-edge); border-radius: var(--radius-sm); padding: 20px; box-shadow: var(--shadow-soft); }
+#ss-app .ss-dilemma h4 { font-family: var(--serif); font-size: 20px; margin: 0 0 12px; }
+#ss-app .ss-choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+@media (max-width: 560px) { #ss-app .ss-choice-grid { grid-template-columns: 1fr; } }
+#ss-app .ss-choice { border: 2px solid var(--card-edge); border-radius: 12px; padding: 14px; cursor: pointer; }
+#ss-app .ss-choice:hover { border-color: var(--gold); }
+#ss-app .ss-choice.picked { border-color: var(--teal); background: rgba(47,143,135,.06); }
+#ss-app .ss-bar-row { margin: 6px 0; }
+#ss-app .ss-bar-row .ss-bl { font-size: 13px; display: flex; justify-content: space-between; }
+#ss-app .ss-bar { height: 10px; border-radius: 5px; background: var(--bg-soft); overflow: hidden; }
+#ss-app .ss-bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--gold), var(--teal)); }
+
+#ss-app .ss-waqf-stepper { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+#ss-app .ss-waqf-step { flex: 1; min-width: 160px; background: var(--bg-soft); border-radius: 12px; padding: 14px; }
+#ss-app .ss-waqf-step h5 { margin: 0 0 8px; font-size: 13px; color: var(--gold-deep); }
+#ss-app .ss-infogrid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-top: 16px; }
+@media (max-width: 600px) { #ss-app .ss-infogrid { grid-template-columns: repeat(2,1fr); } }
+#ss-app .ss-info { background: linear-gradient(135deg, var(--bg-soft), var(--card)); border: 1px solid var(--card-edge); border-radius: 12px; padding: 14px; text-align: center; }
+#ss-app .ss-info .ss-iy { font-weight: 800; color: var(--gold-deep); }
+#ss-app .ss-info .ss-iv { font-size: 22px; font-weight: 800; color: var(--teal-deep); margin: 4px 0; }
+#ss-app .ss-info .ss-id { font-size: 12px; color: var(--ink-soft); }
+
+/* ----------------------------- Module D --------------------------------- */
+#ss-app .ss-guide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 16px; }
+#ss-app .ss-guide-card { background: var(--card); border: 1px solid var(--card-edge); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow-soft); }
+#ss-app .ss-guide-card h4 { font-family: var(--serif); font-size: 18px; margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+#ss-app .ss-guide-card ul { margin: 6px 0; padding-left: 18px; }
+#ss-app .ss-guide-card li { font-size: 14px; margin-bottom: 6px; }
+#ss-app .ss-guide-card .ss-do li { color: var(--green); }
+#ss-app .ss-guide-card .ss-dont li { color: var(--rose); }
+#ss-app .ss-guide-card .ss-list-h { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; margin: 8px 0 4px; }
+#ss-app .ss-guide-card .ss-do .ss-list-h { color: var(--green); }
+#ss-app .ss-guide-card .ss-dont .ss-list-h { color: var(--rose); }
+
+#ss-app .ss-wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 18px; }
+#ss-app .ss-wall-card { background: var(--card); border: 1px solid var(--card-edge); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-soft); cursor: pointer; transition: transform .14s ease, box-shadow .14s ease; }
+#ss-app .ss-wall-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+#ss-app .ss-wall-card .ss-wall-img { height: 120px; background-size: cover; background-position: center; }
+#ss-app .ss-wall-card .ss-wall-body { padding: 16px; }
+#ss-app .ss-wall-card h4 { font-family: var(--serif); font-size: 19px; margin: 0 0 6px; }
+#ss-app .ss-wall-card .ss-teaser { font-size: 14px; color: var(--ink-soft); font-style: italic; }
+
+#ss-app .ss-submit { background: var(--card); border: 1px solid var(--card-edge); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow-soft); margin-top: 8px; }
+#ss-app .ss-field { margin-bottom: 14px; }
+#ss-app .ss-field label { display: block; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+#ss-app .ss-field input, #ss-app .ss-field textarea {
+  width: 100%; font-family: inherit; font-size: 15px; padding: 12px 14px;
+  border: 1px solid var(--card-edge); border-radius: 10px; background: var(--bg); color: var(--ink);
+}
+#ss-app .ss-field input:focus, #ss-app .ss-field textarea:focus { outline: none; border-color: var(--gold); }
+#ss-app .ss-counter { font-size: 12px; color: var(--ink-soft); text-align: right; margin-top: 4px; }
+
+/* ----------------------------- Flowchart modal -------------------------- */
+#ss-app .ss-modal-bg { position: fixed; inset: 0; background: rgba(40,28,16,.6); z-index: 60; display: flex; align-items: center; justify-content: center; padding: 20px; }
+#ss-app .ss-modal { background: var(--card); border-radius: var(--radius); max-width: 760px; width: 100%; max-height: 90vh; overflow: auto; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+#ss-app .ss-modal img { width: 100%; display: block; }
+#ss-app .ss-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--card-edge); position: sticky; top: 0; background: var(--card); }
+#ss-app .ss-modal-head h3 { margin: 0; font-family: var(--serif); }
+#ss-app .ss-x { font-size: 22px; color: var(--ink-soft); cursor: pointer; }
+
+/* ----------------------------- Badges ----------------------------------- */
+#ss-app .ss-badge-screen { text-align: center; padding: 30px 16px; }
+#ss-app .ss-badge-screen img { width: 130px; }
+#ss-app .ss-badge-list { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 18px; }
+#ss-app .ss-badge { display: flex; flex-direction: column; align-items: center; gap: 6px; opacity: .35; filter: grayscale(1); transition: opacity .2s; }
+#ss-app .ss-badge.earned { opacity: 1; filter: none; }
+#ss-app .ss-badge img { width: 56px; }
+#ss-app .ss-badge span { font-size: 11px; font-weight: 700; color: var(--ink-soft); max-width: 70px; text-align: center; }
+
+/* ----------------------------- Misc ------------------------------------- */
+#ss-app .ss-empty { text-align: center; padding: 40px; color: var(--ink-soft); }
+#ss-app .ss-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: #fff; padding: 12px 22px; border-radius: 999px;
+  box-shadow: var(--shadow); z-index: 80; font-weight: 700; font-size: 14px;
+  animation: ss-pop .3s ease;
+}
+@keyframes ss-pop { from { opacity: 0; transform: translate(-50%, 10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes ss-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+#ss-app .ss-view { animation: ss-fade .25s ease; }
+#keyframes ss-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+#ss-app .ss-bounce { animation: ss-bounce .5s ease; }
+
+/* respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  #ss-app * { animation: none !important; transition: none !important; }
+}
+
+/* =========================================================================
+   v2 ADDITIONS — bilingual home, language/age choice, hub, completion,
+   SVG illustrations, game sketches, RTL mirroring.
+   ========================================================================= */
+
+/* ---- Large buttons ---- */
+#ss-app .ss-btn-lg { padding: 16px 36px; font-size: 18px; }
+
+/* ---- Language toggle (top bar) ---- */
+#ss-app .ss-lang-toggle {
+  background: var(--card); border: 1px solid var(--card-edge); color: var(--ink);
+  padding: 8px 16px; border-radius: 999px; font-weight: 700; font-size: 13px;
+  box-shadow: var(--shadow-soft); cursor: pointer;
+}
+#ss-app .ss-lang-toggle:hover { border-color: var(--gold); }
+
+/* ---- Home (bilingual hero) ---- */
+#ss-app .ss-hero-home { text-align: center; padding: 48px 28px; }
+#ss-app .ss-home-logo img { width: 84px; height: 84px; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 18px; }
+#ss-app .ss-bilingual { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; max-width: 880px; margin: 0 auto; text-align: start; }
+@media (max-width: 720px) { #ss-app .ss-bilingual { grid-template-columns: 1fr; gap: 18px; } }
+#ss-app .ss-lang-block { padding: 18px; border-radius: var(--radius); background: rgba(255,253,248,.6); border: 1px solid var(--card-edge); }
+#ss-app .ss-lang-block h1 { font-family: var(--serif); font-size: 26px; margin: 0 0 10px; line-height: 1.2; }
+#ss-app .ss-lang-block p { font-size: 15px; color: var(--ink-soft); margin: 0; }
+#ss-app .ss-lang-ar h1, #ss-app .ss-lang-ar p { font-family: "Segoe UI", Tahoma, "Traditional Arabic", serif; }
+
+/* ---- Centered choice screens (language / age) ---- */
+#ss-app .ss-center-screen { text-align: center; padding: 40px 20px 20px; }
+#ss-app .ss-prompt { font-family: var(--serif); font-size: 32px; margin: 0 0 8px; }
+#ss-app .ss-prompt-sub { color: var(--ink-soft); margin: 0 0 32px; font-size: 16px; }
+#ss-app .ss-choice-row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+#ss-app .ss-big-choice {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  background: var(--card); border: 2px solid var(--card-edge); border-radius: var(--radius);
+  padding: 32px 40px; min-width: 180px; cursor: pointer; box-shadow: var(--shadow);
+  transition: transform .14s ease, border-color .14s ease; font-family: inherit;
+}
+#ss-app .ss-big-choice:hover { transform: translateY(-4px); border-color: var(--gold); }
+#ss-app .ss-bc-emoji { font-size: 52px; }
+#ss-app .ss-bc-label { font-size: 20px; font-weight: 700; color: var(--ink); }
+
+/* ---- Age hub ---- */
+#ss-app .ss-hub-screen { text-align: center; padding: 50px 20px; }
+#ss-app .ss-hub-emoji { font-size: 80px; margin-bottom: 12px; }
+#ss-app .ss-hub-title { font-family: var(--serif); font-size: 36px; margin: 0 0 10px; }
+#ss-app .ss-hub-desc { color: var(--ink-soft); font-size: 17px; max-width: 560px; margin: 0 auto 26px; }
+
+/* ---- Detail title / summary line ---- */
+#ss-app .ss-detail-title { font-family: var(--serif); font-size: 30px; margin: 4px 0 6px; }
+#ss-app .ss-summary-line { font-style: italic; color: var(--teal-deep); margin: 6px 0 0; font-size: 16px; }
+
+/* ---- "Done / finish module" button ---- */
+#ss-app .ss-btn-done { display: block; margin: 26px auto 0; }
+
+/* ---- SVG illustrations ---- */
+#ss-app .ss-sim-illu { width: 220px; flex-shrink: 0; }
+#ss-app .ss-svg-illu { width: 100%; height: auto; display: block; }
+
+/* ---- Impact Firefly images with year progression ---- */
+#ss-app .ss-sim-img {
+  width: 100%; height: 150px; object-fit: cover; display: block;
+  border-radius: var(--radius-sm); box-shadow: var(--shadow-soft);
+  transition: transform .4s ease, filter .4s ease; transform-origin: center;
+}
+#ss-app .ss-sim-img.yr-1  { transform: scale(.82); filter: saturate(.7) brightness(.92); opacity: .85; }
+#ss-app .ss-sim-img.yr-5  { transform: scale(.9);  filter: saturate(.85) brightness(.96); opacity: .92; }
+#ss-app .ss-sim-img.yr-10 { transform: scale(.96); filter: saturate(1) brightness(1); opacity: .97; }
+#ss-app .ss-sim-img.yr-20 { transform: scale(1);   filter: saturate(1.08) brightness(1.04); opacity: 1; }
+
+/* ---- Game concept sketch ---- */
+#ss-app .ss-game-sketch { display: flex; justify-content: center; padding: 10px 0; }
+#ss-app .ss-sketch { width: 120px; height: auto; }
+
+/* ---- Game win banner ---- */
+#ss-app .ss-game-win { text-align: center; font-size: 48px; margin: 18px 0; }
+#ss-app .ss-tree-win { text-align: center; font-size: 90px; margin: 10px 0; }
+#ss-app .ss-tree-stage-n { color: var(--green); font-weight: 700; font-size: 13px; }
+
+/* ---- Completion screen ---- */
+#ss-app .ss-complete-screen { text-align: center; padding: 50px 20px; }
+#ss-app .ss-complete-badge img { width: 120px; animation: ss-pop .5s ease; }
+#ss-app .ss-complete-title { font-family: var(--serif); font-size: 34px; margin: 16px 0 6px; }
+#ss-app .ss-complete-mod { color: var(--ink-soft); font-size: 18px; margin: 0 0 6px; }
+#ss-app .ss-complete-earned { color: var(--gold-deep); font-weight: 700; font-size: 16px; margin: 0 0 28px; }
+#ss-app .ss-complete-opts { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+/* ---- Stats row ---- */
+#ss-app .ss-badge-h { font-family: var(--serif); font-size: 30px; margin: 10px 0 4px; }
+#ss-app .ss-badge-sub { color: var(--ink-soft); margin: 0 0 20px; }
+#ss-app .ss-stats-row { display: flex; gap: 14px; justify-content: center; margin: 0 0 26px; flex-wrap: wrap; }
+#ss-app .ss-stat { background: var(--card); border: 1px solid var(--card-edge); border-radius: var(--radius-sm); padding: 16px 24px; box-shadow: var(--shadow-soft); min-width: 110px; }
+#ss-app .ss-stat-n { font-size: 32px; font-weight: 800; color: var(--teal-deep); }
+#ss-app .ss-stat-l { font-size: 12px; color: var(--ink-soft); font-weight: 600; }
+#ss-app .ss-badge-hint { margin-top: 26px; color: var(--ink-soft); font-size: 14px; }
+
+/* ---- Chip (used in fill-box) ---- */
+#ss-app .ss-chip { display: inline-flex; flex-direction: column; align-items: center; background: var(--card); border: 1px solid var(--card-edge); border-radius: 10px; padding: 4px 8px; font-size: 11px; }
+#ss-app .ss-chip .ss-ie { font-size: 18px; }
+
+/* ---- Tree stage ---- */
+#ss-app .ss-tree-stage { text-align: center; padding: 6px; }
+#ss-app .ss-tree-emoji { font-size: 90px; display: inline-block; transition: transform .4s ease; }
+
+/* ---- RTL adjustments ---- */
+[dir="rtl"] #ss-app { font-family: "Segoe UI", Tahoma, "Traditional Arabic", serif; }
+[dir="rtl"] #ss-app .ss-prose p:first-letter { font-family: inherit; }
+[dir="rtl"] #ss-app .ss-counter { text-align: left; }
+[dir="rtl"] #ss-app .ss-topbar .ss-brand { flex-direction: row; }
+[dir="rtl"] #ss-app .ss-back::before { content: "→ "; }
+[dir="rtl"] #ss-app .ss-back { direction: rtl; }
+
+/* ---- Submission subtitle ---- */
+#ss-app .ss-submit-sub { color: var(--ink-soft); margin: 0 0 16px; font-size: 14px; }
+
+/* ---- Story flipbook (Module A, 4 pages) ---- */
+#ss-app .ss-flipbook { max-width: 900px; margin: 0 auto; }
+#ss-app .ss-fb-head { text-align: center; margin-bottom: 16px; }
+#ss-app .ss-fb-head .ss-num { font-size: 12px; font-weight: 800; color: var(--gold-deep); letter-spacing: .06em; }
+#ss-app .ss-fb-head .ss-detail-title { font-family: var(--serif); font-size: 24px; margin: 4px 0; line-height: 1.25; }
+#ss-app .ss-fb-page { background: var(--card); border: 1px solid var(--card-edge); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: grid; grid-template-columns: 1fr 1fr; min-height: 380px; }
+@media (max-width: 720px) { #ss-app .ss-fb-page { grid-template-columns: 1fr; } }
+#ss-app .ss-fb-img { background: var(--bg-soft); }
+#ss-app .ss-fb-img img { width: 100%; height: 100%; max-height: 420px; object-fit: cover; display: block; }
+@media (max-width: 720px) { #ss-app .ss-fb-img img { max-height: 240px; } }
+#ss-app .ss-fb-text { padding: 28px 30px; font-size: 16px; line-height: 1.8; overflow-y: auto; }
+[dir="rtl"] #ss-app .ss-fb-text { text-align: right; }
+#ss-app .ss-fb-text.ss-dropcap::first-letter { font-family: var(--serif); font-size: 3.4em; font-weight: 700; color: var(--gold-deep); float: left; line-height: .85; margin: 4px 8px 0 0; }
+[dir="rtl"] #ss-app .ss-fb-text.ss-dropcap::first-letter { float: right; margin: 4px 0 0 8px; }
+#ss-app .ss-fb-nav { display: flex; align-items: center; justify-content: center; gap: 18px; margin: 18px 0; }
+#ss-app .ss-fb-arrow { width: 48px; height: 48px; border-radius: 50%; background: var(--card); border: 1px solid var(--card-edge); color: var(--ink); font-size: 22px; cursor: pointer; box-shadow: var(--shadow-soft); transition: transform .12s; }
+#ss-app .ss-fb-arrow:hover:not(:disabled) { transform: scale(1.08); border-color: var(--gold); }
+#ss-app .ss-fb-arrow:disabled { opacity: .35; cursor: not-allowed; }
+#ss-app .ss-fb-dots { display: flex; gap: 10px; }
+#ss-app .ss-fb-dot { width: 11px; height: 11px; border-radius: 50%; background: var(--bg-soft); border: 1px solid var(--card-edge); cursor: pointer; transition: background .12s; }
+#ss-app .ss-fb-dot.on { background: linear-gradient(135deg, var(--gold), var(--teal)); border-color: transparent; }
+
