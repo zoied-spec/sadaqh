@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sadaqah Stories — Interactive Charity Learning App</title>
+  <meta name="description" content="Explore 1,400 years of Islamic generosity: historical stories, impact simulations, youth mini-games, and a community story wall. Available in English and Arabic.">
+  <link rel="icon" href="assets/icon_tree.png">
+  <link rel="stylesheet" href="styles.css">
+  <style>html, body { margin: 0; padding: 0; background: #fbf6ee; }</style>
+</head>
+<body>
+  <div id="ss-app"></div>
+
+  <script src="data.js"></script>
+  <script src="data-ar.js"></script>
+  <script src="data-stories.js"></script>
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    (function () {
+      document.addEventListener("input", function (e) {
+        var app = document.getElementById("ss-app");
+        if (!app || !app.contains(e.target)) return;
+        if (e.target && e.target.id === "ss-f-body") {
+          var wc = e.target.value.trim().split(/\s+/).filter(Boolean).length;
+          var el = document.getElementById("ss-wc");
+          if (el) {
+            el.textContent = wc;
+            el.style.color = (wc >= 300 && wc <= 700) ? "var(--green)" : "var(--ink-soft)";
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
