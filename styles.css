@@ -516,3 +516,85 @@
 #ss-app .ss-fb-dot { width: 11px; height: 11px; border-radius: 50%; background: var(--bg-soft); border: 1px solid var(--card-edge); cursor: pointer; transition: background .12s; }
 #ss-app .ss-fb-dot.on { background: linear-gradient(135deg, var(--gold), var(--teal)); border-color: transparent; }
 
+/* ---- Helping Hands (bilingual content + video) ---- */
+#ss-app .ss-help-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+@media (max-width: 760px) { #ss-app .ss-help-wrap { grid-template-columns: 1fr; } }
+#ss-app .ss-help-block { background: var(--card); border: 1px solid var(--card-edge); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-soft); }
+#ss-app .ss-help-title { font-family: var(--serif); font-size: 20px; margin: 0 0 12px; line-height: 1.3; }
+#ss-app .ss-help-desc { font-size: 15.5px; line-height: 1.8; color: var(--ink); margin: 0 0 16px; }
+[dir="rtl"] #ss-app .ss-help-desc { text-align: right; }
+#ss-app .ss-video { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: var(--radius-sm); box-shadow: var(--shadow-soft); }
+#ss-app .ss-video iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+/* ---- Project title + funding + logos (home) ---- */
+#ss-app .ss-project-title { text-align: center; margin: 8px 0 18px; }
+#ss-app .ss-project-title div { font-family: var(--serif); font-size: 22px; font-weight: 800; color: var(--gold-deep); line-height: 1.4; }
+#ss-app .ss-project-title div:last-child { color: var(--teal-deep); }
+#ss-app .ss-funding { font-size: 13px; color: var(--ink-soft); margin-top: 12px; line-height: 1.6; }
+#ss-app .ss-logos { display: flex; justify-content: center; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--card-edge); }
+#ss-app .ss-logos img { height: 56px; width: auto; max-width: 160px; object-fit: contain; opacity: .85; filter: grayscale(.2); transition: opacity .2s; }
+#ss-app .ss-logos img:hover { opacity: 1; }
+
+/* ---- Footer (all pages) ---- */
+#ss-app .ss-footer { margin-top: 48px; padding: 20px 0 8px; border-top: 1px solid var(--card-edge); text-align: center; }
+#ss-app .ss-footer-en { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+#ss-app .ss-footer-ar { font-size: 12px; color: var(--ink-soft); line-height: 1.6; margin-top: 8px; }
+
+/* ---- About page ---- */
+#ss-app .ss-about { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; max-width: 900px; margin: 0 auto; direction: ltr; }
+@media (max-width: 760px) { #ss-app .ss-about { grid-template-columns: 1fr; } }
+#ss-app .ss-about-block { background: var(--card); border: 1px solid var(--card-edge); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-soft); }
+#ss-app .ss-about-block h3 { font-family: var(--serif); font-size: 18px; margin: 0 0 10px; color: var(--gold-deep); }
+#ss-app .ss-about-block p { font-size: 15px; line-height: 1.8; margin: 0; }
+[dir="rtl"] #ss-app .ss-about-block p { text-align: right; }
+
+/* ---- Story video (after flipbook) ---- */
+#ss-app .ss-story-video { max-width: 720px; margin: 20px auto 0; }
+#ss-app .ss-story-video .ss-video { max-width: 560px; margin: 0 auto; }
+
+/* ---- Lexicon table (wiki style) ---- */
+#ss-app .ss-lex-intro { font-size: 15px; line-height: 1.8; color: var(--ink-soft); max-width: 800px; margin: 0 auto 22px; }
+[dir="rtl"] #ss-app .ss-lex-intro { text-align: right; }
+#ss-app .ss-lex-table-wrap { max-width: 960px; margin: 0 auto; overflow-x: auto; border-radius: var(--radius); box-shadow: var(--shadow-soft); border: 1px solid var(--card-edge); }
+#ss-app .ss-lex-table { width: 100%; border-collapse: collapse; background: var(--card); font-size: 14px; }
+#ss-app .ss-lex-table thead th { background: linear-gradient(135deg, var(--gold), var(--gold-deep)); color: #fff; padding: 12px 14px; text-align: start; font-weight: 700; font-size: 13px; position: sticky; top: 0; }
+#ss-app .ss-lex-table tbody td { padding: 12px 14px; border-bottom: 1px solid var(--card-edge); line-height: 1.6; vertical-align: top; }
+#ss-app .ss-lex-table tbody tr:nth-child(even) { background: var(--bg-soft); }
+#ss-app .ss-lex-table tbody tr:hover { background: rgba(199,154,58,.08); }
+#ss-app .ss-lex-table td:first-child { font-weight: 700; color: var(--teal-deep); white-space: nowrap; }
+[dir="rtl"] #ss-app .ss-lex-table td:first-child { font-family: "Segoe UI", Tahoma, "Traditional Arabic", serif; }
+
+/* ---- Game sketch animations ---- */
+#ss-app .ss-sketch { width: 150px; height: auto; }
+#ss-app .ss-anim-float { animation: ss-skfloat 2.6s ease-in-out infinite; }
+@keyframes ss-skfloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+#ss-app .ss-anim-drop { animation: ss-skdrop 2.2s ease-in-out infinite; }
+@keyframes ss-skdrop { 0%,100% { transform: translateY(-4px); opacity:.9; } 50% { transform: translateY(3px); opacity:1; } }
+#ss-app .ss-anim-glow { animation: ss-skglow 2.4s ease-in-out infinite; }
+@keyframes ss-skglow { 0%,100% { filter: drop-shadow(0 0 0 rgba(199,154,58,0)); } 50% { filter: drop-shadow(0 0 6px rgba(199,154,58,.9)); } }
+#ss-app .ss-anim-tilt { animation: ss-sktilt 3s ease-in-out infinite; transform-origin: 60px 14px; }
+@keyframes ss-sktilt { 0%,100% { transform: rotate(0deg); } 30% { transform: rotate(-6deg); } 70% { transform: rotate(6deg); } }
+#ss-app .ss-anim-grow { animation: ss-skgrow 2.8s ease-in-out infinite; transform-origin: bottom; }
+@keyframes ss-skgrow { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(1.06); } }
+
+/* ---- Search bar ---- */
+#ss-app .ss-search-bar { display: flex; align-items: center; gap: 12px; margin: 0 0 18px; }
+#ss-app .ss-search-bar input[type="search"] {
+  flex: 1; max-width: 420px; font-family: inherit; font-size: 15px; padding: 11px 16px;
+  border: 1px solid var(--card-edge); border-radius: 999px; background: var(--card); color: var(--ink);
+  box-shadow: var(--shadow-soft);
+}
+[dir="rtl"] #ss-app .ss-search-bar input[type="search"] { text-align: right; }
+#ss-app .ss-search-bar input[type="search"]:focus { outline: none; border-color: var(--gold); }
+#ss-app .ss-search-count { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+
+/* ---- Read badge on story cards ---- */
+#ss-app .ss-story-card { position: relative; }
+#ss-app .ss-read-badge {
+  position: absolute; top: 10px; inset-inline-end: 10px; z-index: 2;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--green), #3f6b35); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800;
+  box-shadow: var(--shadow-soft);
+}
+

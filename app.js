@@ -23,6 +23,8 @@
     simYear: 0,
     storyArt: 0,
     storyPage: 0,
+    storyQuery: "",
+    lexQuery: "",
     stars: Number(localStorage.getItem("ss_stars") || 0),
     badges: JSON.parse(localStorage.getItem("ss_badges") || "[]"),
     wall: JSON.parse(localStorage.getItem("ss_wall") || "[]"),
@@ -100,29 +102,47 @@
         </div>
         ${state.lang ? `<button class="ss-lang-toggle" data-act="toggle-lang">${state.lang === "en" ? "العربية" : "English"}</button>` : ""}
       </div>
-      <div class="ss-wrap"><div class="ss-view">${inner}</div></div>`;
+      <div class="ss-wrap">
+        <div class="ss-view">${inner}</div>
+        <footer class="ss-footer">
+          <div class="ss-footer-en" dir="ltr">${window.SADAQAH_I18N.en.footer}</div>
+          <div class="ss-footer-ar" dir="rtl">${window.SADAQAH_I18N.ar.footer}</div>
+        </footer>
+      </div>`;
   }
 
   /* ----------------------------- HOME ----------------------------------- */
   function home() {
-    // Home shows hero text in BOTH languages (per requirement), then CTA.
     const en = window.SADAQAH_I18N.en, ar = window.SADAQAH_I18N.ar;
+    const logos = () => `<div class="ss-logos">
+      <img src="${ASSET}nuq.jpg" alt="Northwestern University in Qatar">
+      <img src="${ASSET}qrdi.svg" alt="QRDI Council">
+      <img src="${ASSET}raca.png" alt="RACA">
+    </div>`;
     return `
       <div class="ss-hero ss-hero-home">
         <div class="ss-home-logo"><img src="${ASSET}icon_tree.png" alt=""></div>
+        <div class="ss-project-title">
+          <div dir="ltr">${en["project.title"]}</div>
+          <div dir="rtl">${ar["project.title"]}</div>
+        </div>
         <div class="ss-bilingual">
           <div class="ss-lang-block ss-lang-en" dir="ltr">
             <h1>${en["home.h1"]}</h1>
             <p>${en["home.p"]}</p>
+            <p class="ss-funding">${en["home.funding"]}</p>
           </div>
           <div class="ss-lang-block ss-lang-ar" dir="rtl">
             <h1>${ar["home.h1"]}</h1>
             <p>${ar["home.p"]}</p>
+            <p class="ss-funding">${ar["home.funding"]}</p>
           </div>
         </div>
         <div class="ss-cta" style="margin-top:24px;">
           <button class="ss-btn ss-btn-primary ss-btn-lg" data-go="language">${en["home.cta.start"]} / ${ar["home.cta.start"]}</button>
+          <button class="ss-btn ss-btn-ghost" data-go="about">${en["about.title"]} / ${ar["about.title"]}</button>
         </div>
+        ${logos()}
       </div>`;
   }
 
@@ -181,6 +201,8 @@
       { go: "module-b", label: t("mod.impact"), desc: t("mod.impact.desc"), art: "water_a.jpeg" },
       { go: "module-c", label: t("mod.games"), desc: t("mod.games.desc"), art: "trees_b.jpeg" },
       { go: "module-d", label: t("mod.wall"), desc: t("mod.wall.desc"), art: "food_parcel_a.jpeg" },
+      { go: "helping-hands", label: t("mod.help"), desc: t("mod.help.desc"), art: "child_donate.jpeg" },
+      { go: "lexic", label: t("mod.lexic"), desc: t("mod.lexic.desc"), art: "stories_en/en_30_p2.jpg" },
     ];
     return `
       <div class="ss-section-head">
@@ -208,21 +230,34 @@
 
   function moduleA() {
     const list = stories();
+    const q = (state.storyQuery || "").toLowerCase();
+    const filtered = q ? list.filter((s) => s.title.toLowerCase().includes(q) || s.pages.some((p) => (p.text || "").toLowerCase().includes(q))) : list;
+    const readIds = (state.stats && state.stats.storiesRead) || [];
     return `
       <div class="ss-section-head">
         <h2>${t("mod.stories")}</h2>
         <p>${t("mod.stories.desc")}</p>
       </div>
+      <div class="ss-search-bar">
+        <input type="search" id="ss-story-search" placeholder="${t("search.stories")}" value="${state.storyQuery || ""}" data-act-input="story-search">
+        <span class="ss-search-count">${filtered.length} / ${list.length}</span>
+      </div>
       <div class="ss-grid">
-        ${list.map((s, i) => `
+        ${filtered.map((s) => {
+          const idx = list.indexOf(s) + 1;
+          const read = readIds.includes(s.id);
+          return `
           <div class="ss-story-card" data-act="open-story" data-id="${s.id}">
             <div class="ss-art" style="background-image:url('${ASSET}${s.pages[0].img}')"></div>
+            ${read ? '<span class="ss-read-badge">✓</span>' : ''}
             <div class="ss-body">
-              <div class="ss-num">${t("story.of")} ${i+1} / ${list.length}</div>
+              <div class="ss-num">${t("story.of")} ${idx} / ${list.length}</div>
               <h4>${s.title}</h4>
             </div>
-          </div>`).join("")}
-      </div>`;
+          </div>`;
+        }).join("")}
+      </div>
+      ${filtered.length === 0 ? `<div class="ss-empty">${t("search.none")}</div>` : ''}`;
   }
   function storyView() {
     const list = stories();
@@ -240,14 +275,15 @@
           <h2 class="ss-detail-title">${s.title}</h2>
         </div>
         <div class="ss-fb-page">
-          <div class="ss-fb-img"><img src="${ASSET}${pg.img}" alt=""></div>
+          <div class="ss-fb-img"><img src="${ASSET}${pg.img}" alt="" loading="lazy" decoding="async"></div>
           <div class="ss-fb-text ${page===0?'ss-dropcap':''}">${pg.text}</div>
         </div>
         <div class="ss-fb-nav">
-          <button class="ss-fb-arrow" data-act="fb-prev" ${page===0?'disabled':''}>←</button>
+          <button class="ss-fb-arrow" data-act="fb-prev" ${page===0?'disabled':''}>${isRTL()?"→":"←"}</button>
           <div class="ss-fb-dots">${s.pages.map((_,i)=>`<span class="ss-fb-dot ${i===page?'on':''}" data-act="fb-goto" data-page="${i}"></span>`).join("")}</div>
-          <button class="ss-fb-arrow" data-act="fb-next" ${last?'disabled':''}>→</button>
+          <button class="ss-fb-arrow" data-act="fb-next" ${last?'disabled':''}>${isRTL()?"←":"→"}</button>
         </div>
+        ${(last && window.SADAQAH_VIDEOS && window.SADAQAH_VIDEOS[s.id]) ? `<div class="ss-story-video"><div class="ss-video"><iframe src="https://www.youtube-nocookie.com/embed/${window.SADAQAH_VIDEOS[s.id]}?rel=0" title="YouTube video player" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>` : ''}
         ${last ? `<button class="ss-btn ss-btn-primary ss-btn-done" data-act="finish-module" data-mod="stories">${t("complete.opt.progress")} →</button>` : ''}
       </div>`;
   }
@@ -342,18 +378,31 @@
           </div>`).join("")}
       </div>`;
   }
-  // Simple concept sketch per game (line-drawing SVG).
+  // Illustrated concept sketch per game — watercolor palette, animated.
   function gameSketch(id) {
+    const W = (inner) => `<svg viewBox="0 0 120 60" class="ss-sketch">${inner}</svg>`;
     const s = {
-      "charity-match": `<svg viewBox="0 0 80 50" class="ss-sketch"><rect x="5" y="5" width="18" height="22" rx="3" fill="#c79a3a"/><rect x="30" y="5" width="18" height="22" rx="3" fill="#fffdf8" stroke="#c79a3a"/><rect x="55" y="5" width="18" height="22" rx="3" fill="#2f8f87"/></svg>`,
-      "fill-box": `<svg viewBox="0 0 80 50" class="ss-sketch"><rect x="20" y="15" width="40" height="28" rx="3" fill="none" stroke="#c79a3a" stroke-width="2" stroke-dasharray="4 3"/><circle cx="35" cy="8" r="5" fill="#e8a23a"/><rect x="50" y="3" width="8" height="8" fill="#c66b6b"/></svg>`,
-      "giving-tree": `<svg viewBox="0 0 80 50" class="ss-sketch"><rect x="37" y="30" width="6" height="18" fill="#6b5a48"/><circle cx="40" cy="25" r="14" fill="#5b8c4f"/></svg>`,
-      "build-community": `<svg viewBox="0 0 80 50" class="ss-sketch"><rect x="10" y="20" width="18" height="25" fill="#e8d5a8"/><rect x="32" y="15" width="18" height="30" fill="#c79a3a"/><rect x="54" y="25" width="18" height="20" fill="#2f8f87"/></svg>`,
-      "sort-zakat": `<svg viewBox="0 0 80 50" class="ss-sketch"><rect x="5" y="10" width="20" height="30" rx="2" fill="none" stroke="#6b5a48"/><rect x="30" y="10" width="20" height="30" rx="2" fill="none" stroke="#6b5a48"/><rect x="55" y="10" width="20" height="30" rx="2" fill="#c79a3a"/><circle cx="65" cy="25" r="6" fill="#fff"/></svg>`,
-      "chain-reaction": `<svg viewBox="0 0 80 50" class="ss-sketch"><circle cx="12" cy="25" r="6" fill="#c79a3a"/><circle cx="32" cy="25" r="6" fill="#2f8f87"/><circle cx="52" cy="25" r="6" fill="#5b8c4f"/><circle cx="72" cy="25" r="6" fill="#c66b6b"/><line x1="18" y1="25" x2="26" y2="25" stroke="#6b5a48"/><line x1="38" y1="25" x2="46" y2="25" stroke="#6b5a48"/><line x1="58" y1="25" x2="66" y2="25" stroke="#6b5a48"/></svg>`,
-      "waqf-architect": `<svg viewBox="0 0 80 50" class="ss-sketch"><rect x="15" y="10" width="50" height="32" fill="none" stroke="#c79a3a" stroke-width="2"/><line x1="15" y1="20" x2="65" y2="20" stroke="#c79a3a"/><line x1="15" y1="30" x2="65" y2="30" stroke="#c79a3a"/><circle cx="40" cy="38" r="4" fill="#6b5a48"/></svg>`,
-      "giving-dilemma": `<svg viewBox="0 0 80 50" class="ss-sketch"><path d="M20 10 L20 35 L40 35" fill="none" stroke="#2f8f87" stroke-width="2"/><path d="M60 10 L60 35 L40 35" fill="none" stroke="#c66b6b" stroke-width="2"/><circle cx="40" cy="35" r="4" fill="#c79a3a"/></svg>`,
-      "impact-calc": `<svg viewBox="0 0 80 50" class="ss-sketch"><rect x="8" y="18" width="64" height="8" rx="4" fill="#e8d5a8"/><circle cx="30" cy="22" r="9" fill="#c79a3a"/><rect x="50" y="32" width="18" height="10" fill="#2f8f87"/><text x="59" y="40" text-anchor="middle" font-size="8" fill="#fff">=</text></svg>`,
+      // Cards: two face-down, one matched pair glowing (memory game)
+      "charity-match": W(`<rect x="6" y="12" width="24" height="32" rx="4" fill="#c79a3a" class="ss-anim-float"/><text x="18" y="32" text-anchor="middle" font-size="14" fill="#fff">?</text>
+        <rect x="36" y="12" width="24" height="32" rx="4" fill="#5b8c4f" stroke="#3f6b35" stroke-width="2" class="ss-anim-glow"/><path d="M48 22 l2.4 4.8 5.2.8-3.8 3.6.9 5.2-4.7-2.4-4.7 2.4.9-5.2-3.8-3.6 5.2-.8z" fill="#fff"/>
+        <rect x="66" y="12" width="24" height="32" rx="4" fill="#c79a3a" class="ss-anim-float" style="animation-delay:.4s"/><text x="78" y="32" text-anchor="middle" font-size="14" fill="#fff">?</text>
+        <rect x="96" y="12" width="24" height="32" rx="4" fill="#2f8f87" opacity=".85"/><text x="108" y="32" text-anchor="middle" font-size="14" fill="#fff">?</text>`),
+      // Donation box with items dropping in
+      "fill-box": W(`<rect x="30" y="26" width="60" height="28" rx="3" fill="#e8d5a8" stroke="#c79a3a" stroke-width="2"/><rect x="40" y="20" width="40" height="8" fill="#c79a3a"/><circle cx="46" cy="12" r="6" fill="#e8a23a" class="ss-anim-drop"/><rect x="60" y="6" width="10" height="10" rx="2" fill="#c66b6b" class="ss-anim-drop" style="animation-delay:.5s"/><path d="M80 14 l3 6 6 .9-4.4 4.2 1 6-5.6-3-5.6 3 1-6-4.4-4.2 6-.9z" fill="#5b8c4f" class="ss-anim-drop" style="animation-delay:1s"/>`),
+      // Tree growth stages + water drop
+      "giving-tree": W(`<circle cx="14" cy="46" r="3" fill="#5b8c4f"/><circle cx="30" cy="42" r="4.5" fill="#5b8c4f"/><circle cx="52" cy="34" r="7" fill="#5b8c4f"/><circle cx="84" cy="26" r="12" fill="#5b8c4f"/><circle cx="84" cy="26" r="12" fill="none" stroke="#3f6b35" stroke-width="1.5"/><rect x="82" y="36" width="4" height="14" fill="#6b5a48"/><path d="M60 8 c-3 4-5 7-5 10 a5 5 0 0 0 10 0 c0-3-2-6-5-10z" fill="#2f8f87" class="ss-anim-float"/>`),
+      // Village skyline: well, school, clinic
+      "build-community": W(`<rect x="4" y="28" width="22" height="24" fill="#e8d5a8" stroke="#c79a3a"/><path d="M4 28 l11-8 11 8" fill="#c79a3a"/><rect x="48" y="22" width="24" height="30" fill="#2f8f87"/><rect x="52" y="28" width="6" height="8" fill="#fff"/><rect x="62" y="28" width="6" height="8" fill="#fff"/><rect x="94" y="30" width="22" height="22" rx="2" fill="#c66b6b"/><rect x="99" y="36" width="12" height="3" fill="#fff"/><rect x="103.5" y="32" width="3" height="11" fill="#fff"/><circle cx="26" cy="20" r="4" fill="#5b8c4f" class="ss-anim-glow"/>`),
+      // Person chip dropping into labeled bin
+      "sort-zakat": W(`<rect x="8" y="18" width="34" height="34" rx="3" fill="none" stroke="#6b5a48" stroke-width="2" stroke-dasharray="4 3"/><rect x="78" y="18" width="34" height="34" rx="3" fill="#c79a3a"/><text x="25" y="38" text-anchor="middle" font-size="7" fill="#6b5a48">؟</text><text x="95" y="38" text-anchor="middle" font-size="7" fill="#fff">✓</text><circle cx="60" cy="10" r="6" fill="#e8c4a0" stroke="#c79a3a" class="ss-anim-drop"/><rect x="55" y="17" width="10" height="12" rx="2" fill="#2f8f87" class="ss-anim-drop"/><path d="M42 30 q18-14 36 0" fill="none" stroke="#c79a3a" stroke-width="1.5" stroke-dasharray="3 3"/>`),
+      // Ripple chain with growing impact
+      "chain-reaction": W(`<circle cx="10" cy="30" r="4" fill="#c79a3a"/><circle cx="34" cy="30" r="7" fill="#e8a23a"/><circle cx="62" cy="30" r="10" fill="#5b8c4f"/><circle cx="96" cy="30" r="14" fill="#2f8f87" class="ss-anim-glow"/><line x1="14" y1="30" x2="27" y2="30" stroke="#6b5a48" stroke-width="1.5"/><line x1="41" y1="30" x2="52" y2="30" stroke="#6b5a48" stroke-width="1.5"/><line x1="72" y1="30" x2="82" y2="30" stroke="#6b5a48" stroke-width="1.5"/><path d="M96 16 c-2 3-3 5-3 7a3 3 0 0 0 6 0c0-2-1-4-3-7z" fill="#fff"/>`),
+      // Building with coin flow
+      "waqf-architect": W(`<rect x="8" y="14" width="34" height="40" fill="#e8d5a8" stroke="#c79a3a" stroke-width="2"/><rect x="14" y="20" width="8" height="8" fill="#c79a3a"/><rect x="28" y="20" width="8" height="8" fill="#c79a3a"/><rect x="14" y="32" width="8" height="8" fill="#c79a3a"/><rect x="28" y="32" width="8" height="8" fill="#c79a3a"/><circle cx="70" cy="20" r="7" fill="#c79a3a" class="ss-anim-float"/><text x="70" y="24" text-anchor="middle" font-size="10" fill="#fff">$</text><path d="M80 22 q14 4 12 16" fill="none" stroke="#5b8c4f" stroke-width="2" stroke-dasharray="4 3"/><rect x="88" y="34" width="24" height="20" rx="2" fill="#5b8c4f"/><text x="100" y="47" text-anchor="middle" font-size="8" fill="#fff">٪</text>`),
+      // Balance scale, two options
+      "giving-dilemma": W(`<rect x="57" y="12" width="5" height="34" fill="#6b5a48"/><line x1="30" y1="14" x2="90" y2="14" stroke="#6b5a48" stroke-width="3" class="ss-anim-tilt"/><circle cx="60" cy="14" r="4" fill="#c79a3a"/><path d="M30 14 l-8 12 h16 z" fill="#2f8f87"/><path d="M90 14 l-8 12 h16 z" fill="#c66b6b"/><rect x="46" y="46" width="28" height="5" rx="2" fill="#6b5a48"/><text x="22" y="40" text-anchor="middle" font-size="7" fill="#2f8f87">A</text><text x="98" y="40" text-anchor="middle" font-size="7" fill="#c66b6b">B</text>`),
+      // Calculator + rising chart
+      "impact-calc": W(`<rect x="8" y="10" width="26" height="40" rx="3" fill="#2f8f87"/><rect x="12" y="14" width="18" height="8" rx="1" fill="#fff"/><rect x="12" y="26" width="5" height="5" fill="#fff"/><rect x="19" y="26" width="5" height="5" fill="#fff"/><rect x="26" y="26" width="5" height="5" fill="#e8a23a"/><rect x="12" y="33" width="5" height="5" fill="#fff"/><rect x="19" y="33" width="5" height="5" fill="#fff"/><rect x="26" y="33" width="5" height="5" fill="#fff"/><rect x="12" y="40" width="12" height="5" fill="#e8a23a"/><rect x="26" y="40" width="5" height="5" fill="#fff"/><rect x="44" y="38" width="8" height="12" fill="#e8d5a8"/><rect x="56" y="30" width="8" height="20" fill="#c79a3a"/><rect x="68" y="22" width="8" height="28" fill="#5b8c4f"/><rect x="80" y="14" width="8" height="36" fill="#2f8f87"/><rect x="92" y="8" width="8" height="42" fill="#1f6b64" class="ss-anim-grow"/><circle cx="96" cy="4" r="3" fill="#c79a3a" class="ss-anim-glow"/>`),
     };
     return s[id] || s["charity-match"];
   }
@@ -720,6 +769,101 @@
 
   function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
+  /* ----------------------------- HELPING HANDS -------------------------- */
+  // Shows only the selected language's content + video (not bilingual).
+  function helpingHands() {
+    const yt = (id) => `<div class="ss-video"><iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0" title="YouTube video player" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`;
+    const en = {
+      dir: "ltr",
+      title: "Helping Hands: Learning How to Give and Be Kind!",
+      desc: 'Imagine a place where every kind thing you do is a special gift! This section tells you all about <strong>Sadaqah</strong>, which is a beautiful word for being a helper. We will find out that even a <strong>smile</strong> is a wonderful gift you can give to anyone. You\'ll learn secret words from <strong>Qatar</strong>, like how friends all jump in together to help someone (we call this a <strong>"Faz\'ah"</strong>). It shows how one tiny good deed can grow as big as a giant forest of rewards from Allah, and how you can be one of the "People of Good" (<em>Ahl al-Kher</em>) who make the world a happy place!',
+      video: "iKOfCm1X79g",
+    };
+    const ar = {
+      dir: "rtl",
+      title: "الأيدي المساعدة: تعلم كيف تعطي وتنشر الخير!",
+      desc: 'تخيل مكاناً يكون فيه كل عمل طيب تقوم به بمثابة هدية خاصة! هذا القسم يخبرك بكل شيء عن <strong>"الصدقة"</strong>، وهي كلمة جميلة تعني أن تكون مساعداً للآخرين. سنتعلم أن حتى <strong>الابتسامة</strong> هدية رائعة يمكنك تقديمها لأي شخص. ستتعلم كلمات سرية من <strong>قطر</strong>، مثل كيف يقفز الأصدقاء معاً لمساعدة شخص ما (نسمي هذا <strong>"فزعة"</strong>). يُظهر كيف يمكن لعمل خير صغير أن ينمو ليصبح كبيراً كغابة عملاقة من الأجر من الله، وكيف يمكنك أن تكون من <strong>"أهل الخير"</strong> الذين يجعلون العالم مكاناً سعيداً!',
+      video: "734vFtBeZ60",
+    };
+    const c = state.lang === "ar" ? ar : en;
+    return `
+      <div class="ss-section-head">
+        <h2>${t("mod.help")}</h2>
+        <p>${t("mod.help.desc")}</p>
+      </div>
+      <div class="ss-help-block" dir="${c.dir}">
+        <h3 class="ss-help-title">${c.title}</h3>
+        <p class="ss-help-desc">${c.desc}</p>
+        ${yt(c.video)}
+      </div>
+      <button class="ss-btn ss-btn-primary ss-btn-done" data-act="finish-module" data-mod="help">${t("complete.opt.progress")} →</button>`;
+  }
+
+  /* ----------------------------- ABOUT ---------------------------------- */
+  function about() {
+    const en = window.SADAQAH_I18N.en, ar = window.SADAQAH_I18N.ar;
+    return `
+      <div class="ss-section-head">
+        <h2>${en["about.title"]} / ${ar["about.title"]}</h2>
+      </div>
+      <div class="ss-about">
+        <div class="ss-about-block" dir="ltr">
+          <h3>${en["about.funding"]}</h3>
+          <p>${en["about.fundingBody"]}</p>
+        </div>
+        <div class="ss-about-block" dir="rtl">
+          <h3>${ar["about.funding"]}</h3>
+          <p>${ar["about.fundingBody"]}</p>
+        </div>
+      </div>
+      <div class="ss-logos">
+        <img src="${ASSET}nuq.jpg" alt="Northwestern University in Qatar">
+        <img src="${ASSET}qrdi.svg" alt="QRDI Council">
+        <img src="${ASSET}raca.png" alt="RACA">
+      </div>`;
+  }
+
+  /* ----------------------------- LEXICON (wiki-style table) ------------- */
+  function lexic() {
+    const L = window.SADAQAH_LEXICON || [];
+    const ar = state.lang === "ar";
+    const intro = ar
+      ? { title: "معجم متخصص للمصطلحات الخيرية", body: "يُنظَّم المعجم التالي اللغة العربية الفصحى الحديثة بالاستناد إلى الاستخدام القرآني والفقهي والمؤسسي، وكذلك اللهجة القطرية، وهي جزء من سلسلة اللهجات العربية الخليجية الأوسع." }
+      : { title: "A Specialised Lexicon of Charitable Terminology", body: "The following lexicon covers Modern Standard Arabic (al-ʿarabiyyah al-fuṣḥā), drawing on Qur'anic, juristic, and institutional usage and the Qatari dialect (lahjat Qaṭar), which is part of the wider Khalījī (Gulf) Arabic continuum." };
+    // EN columns: arabic | translit | en_use ; AR columns: arabic | ar_use
+    const headers = ar
+      ? ["المصطلح", "الاستخدام"]
+      : ["Arabic", "Transliteration", "English Usage"];
+    function cell(val) { return "<td>" + (val || "") + "</td>"; }
+    const q = (state.lexQuery || "").toLowerCase();
+    const filtered = q ? L.filter((e) =>
+      (e.arabic || "").toLowerCase().includes(q) ||
+      (e.translit || "").toLowerCase().includes(q) ||
+      (e.en_use || "").toLowerCase().includes(q) ||
+      (e.ar_use || "").toLowerCase().includes(q)) : L;
+    const rows = filtered.map((e) => {
+      if (ar) return "<tr>" + cell(e.arabic) + cell(e.ar_use) + "</tr>";
+      return "<tr>" + cell(e.arabic) + cell(e.translit) + cell(e.en_use) + "</tr>";
+    }).join("");
+    return `
+      <div class="ss-section-head">
+        <h2>${intro.title}</h2>
+        <p class="ss-lex-intro">${intro.body}</p>
+      </div>
+      <div class="ss-search-bar">
+        <input type="search" id="ss-lex-search" placeholder="${t("search.lex")}" value="${state.lexQuery || ""}" data-act-input="lex-search">
+        <span class="ss-search-count">${filtered.length} / ${L.length}</span>
+      </div>
+      <div class="ss-lex-table-wrap">
+        <table class="ss-lex-table" dir="${ar ? "rtl" : "ltr"}">
+          <thead><tr>${headers.map((h) => "<th>" + h + "</th>").join("")}</tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      ${filtered.length === 0 ? `<div class="ss-empty">${t("search.none")}</div>` : ''}
+      <button class="ss-btn ss-btn-primary ss-btn-done" data-act="finish-module" data-mod="lexic">${t("complete.opt.progress")} →</button>`;
+  }
+
   /* ----------------------------- Render --------------------------------- */
   function viewFor() {
     switch (state.route) {
@@ -735,6 +879,9 @@
       case "play": return playView();
       case "module-d": return moduleD();
       case "sample": return sampleView();
+      case "helping-hands": return helpingHands();
+      case "lexic": return lexic();
+      case "about": return about();
       case "progress": return progress();
       case "complete": return complete();
       default: return home();
@@ -797,6 +944,37 @@
     if (!app || !app.contains(e.target)) return;
     if (e.target.hasAttribute("data-cal") && e.target.getAttribute("data-cal") === "amount") {
       state._calc.amount = Number(e.target.value); rerenderGame();
+    }
+    // search boxes: update state and re-render view only (keeps focus)
+    const inp = e.target.getAttribute("data-act-input");
+    if (inp === "story-search" || inp === "lex-search") {
+      const val = e.target.value;
+      const selStart = e.target.selectionStart;
+      if (inp === "story-search") state.storyQuery = val; else state.lexQuery = val;
+      // re-render only the view, then restore focus + caret
+      const viewEl = document.querySelector("#ss-app .ss-view");
+      if (viewEl) {
+        viewEl.innerHTML = viewFor();
+        const again = document.querySelector('[data-act-input="' + inp + '"]');
+        if (again) { again.focus(); try { again.setSelectionRange(selStart, selStart); } catch (err) {} }
+      }
+    }
+  });
+
+  // Keyboard arrows for the story flipbook
+  document.addEventListener("keydown", function (e) {
+    if (state.route !== "story") return;
+    const tag = (e.target.tagName || "").toLowerCase();
+    if (tag === "input" || tag === "textarea") return;
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      const fwd = isRTL() ? e.key === "ArrowLeft" : e.key === "ArrowRight";
+      const list = stories();
+      const cs = list.find((x) => x.id === (state.params.id || ""));
+      const max = cs ? cs.pages.length - 1 : 3;
+      if (fwd) state.storyPage = Math.min(max, (state.storyPage || 0) + 1);
+      else state.storyPage = Math.max(0, (state.storyPage || 0) - 1);
+      render();
+      e.preventDefault();
     }
   });
 
